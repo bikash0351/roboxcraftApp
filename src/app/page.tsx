@@ -13,9 +13,11 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const kits = products.filter(p => p.category === 'Kits').slice(0, 4);
@@ -26,10 +28,27 @@ export default function Home() {
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
 
+  const [api, setApi] = React.useState<CarouselApi>()
+  const [current, setCurrent] = React.useState(0)
+ 
+  React.useEffect(() => {
+    if (!api) {
+      return
+    }
+ 
+    setCurrent(api.selectedScrollSnap())
+ 
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap())
+    })
+  }, [api])
+
+
   return (
     <div className="flex flex-col gap-16 md:gap-24">
-      <section className="w-full">
+      <section className="w-full relative">
         <Carousel
+          setApi={setApi}
           plugins={[plugin.current]}
           className="w-full"
           onMouseEnter={plugin.current.stop}
@@ -52,6 +71,18 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          {posters.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => api?.scrollTo(index)}
+              className={cn(
+                "h-2 w-2 rounded-full transition-all",
+                current === index ? "w-4 bg-primary" : "bg-primary/50"
+              )}
+            />
+          ))}
+        </div>
       </section>
 
       <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
