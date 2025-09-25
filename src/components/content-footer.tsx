@@ -8,7 +8,6 @@ export function ContentFooter() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                     <div className="flex flex-col items-center md:items-start">
                         <div className="flex items-center gap-2">
-                            <RoboxcraftLogo className="h-10 w-10" />
                             <span className="font-headline text-2xl font-bold">RoboXCraft</span>
                         </div>
                         <p className="mt-2 text-sm">We Sell Robotic Project Kits.</p>
@@ -26,16 +25,9 @@ export function ContentFooter() {
                             </li>
                         </ul>
                     </div>
-                    <div className="space-y-4">
-                        <h3 className="font-headline font-semibold tracking-wider">Address</h3>
-                        <div className="flex items-start justify-center md:justify-start gap-2 text-sm">
-                            <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                            <p>Nitte Meenakshi Institute Of Technology, Bangalore</p>
-                        </div>
-                    </div>
                 </div>
                 <div className="mt-8 border-t border-secondary-foreground/20 pt-6 text-center text-sm">
-                    <p>&copy; {new Date().getFullYear()} RoboXCraft. All Rights Reserved.</p>
+                    <p>Made With❤️By RoboxCraft Team, Copyright &copy; {new Date().getFullYear()} RoboXCraft</p>
                 </div>
             </div>
         </footer>
