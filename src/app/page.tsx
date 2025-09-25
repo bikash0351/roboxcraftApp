@@ -45,7 +45,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16">
+    <div className="flex flex-col">
       <section className="w-full relative">
         <Carousel
           setApi={setApi}
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
         <h2 className="font-headline text-3xl font-bold tracking-tight text-center">Explore Our Universe</h2>
         <div className="mt-6 grid grid-cols-2 gap-4">
           <Card className="flex flex-col items-center text-center p-2">
@@ -127,7 +127,7 @@ export default function Home() {
         </div>
       </section>
       
-      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
         <div className="flex items-center justify-between">
           <h2 className="font-headline text-3xl font-bold tracking-tight">Featured Kits</h2>
           <Button variant="link" asChild>
@@ -141,7 +141,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
         <div className="flex items-center justify-between">
           <h2 className="font-headline text-3xl font-bold tracking-tight">Top Components</h2>
            <Button variant="link" asChild>
@@ -155,7 +155,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-12 md:my-16">
         <h2 className="font-headline text-3xl font-bold tracking-tight">Popular Courses</h2>
         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {courses.map(course => {
