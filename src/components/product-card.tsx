@@ -72,11 +72,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="mt-2 flex items-baseline gap-2">
           {hasDiscount && (
             <span className="text-sm text-muted-foreground line-through">
-              ${product.originalPrice.toFixed(2)}
+              ₹{product.originalPrice.toFixed(2)}
             </span>
           )}
           <span className="text-lg font-bold text-foreground">
-            ${product.price.toFixed(2)}
+            ₹{product.price.toFixed(2)}
           </span>
         </div>
       </CardContent>

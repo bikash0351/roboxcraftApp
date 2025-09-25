@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export default function CartPage() {
     const { items, updateQuantity, removeFromCart, clearCart, totalPrice } = useCart();
-    const shippingCost = 5.00;
+    const shippingCost = 50.00;
     const total = totalPrice + shippingCost;
 
     if (items.length === 0) {
@@ -52,7 +52,7 @@ export default function CartPage() {
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-semibold">{item.name}</h3>
-                                        <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                                        <p className="text-sm text-muted-foreground">₹{item.price.toFixed(2)}</p>
                                         <div className="mt-2 flex items-center gap-2">
                                             <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>
                                                 <Minus className="h-4 w-4" />
@@ -83,16 +83,16 @@ export default function CartPage() {
                         <CardContent className="space-y-4">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>${totalPrice.toFixed(2)}</span>
+                                <span>₹{totalPrice.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Shipping</span>
-                                <span>${shippingCost.toFixed(2)}</span>
+                                <span>₹{shippingCost.toFixed(2)}</span>
                             </div>
                             <Separator />
                             <div className="flex justify-between font-bold">
                                 <span>Total</span>
-                                <span>${total.toFixed(2)}</span>
+                                <span>₹{total.toFixed(2)}</span>
                             </div>
                         </CardContent>
                         <CardFooter>
