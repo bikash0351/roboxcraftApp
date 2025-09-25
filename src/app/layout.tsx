@@ -7,8 +7,8 @@ import { CartProvider } from '@/components/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'RoboMart',
-  description: 'Your one-stop shop for robotic components',
+  title: 'RoboXCraft',
+  description: 'Crafting Imagination into Reality',
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
         <CartProvider>
           <div className="relative flex min-h-dvh flex-col bg-background">
             <SiteHeader />
-            <main className="flex-1 pb-20 pt-16 md:pb-0 md:pt-20">{children}</main>
+            <main className="flex-1 pb-20 pt-36 md:pt-32 md:pb-0">{children}</main>
             <SiteFooter />
           </div>
           <Toaster />
