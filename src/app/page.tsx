@@ -43,41 +43,41 @@ export default function Home() {
       </section>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="flex flex-col items-center text-center">
-            <CardHeader>
-              <ToyBrick className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="font-headline">Robotic Kits</CardTitle>
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="flex flex-col items-center text-center p-2">
+            <CardHeader className="p-2">
+              <ToyBrick className="mx-auto h-8 w-8 text-primary" />
+              <CardTitle className="font-headline text-base">Robotic Kits</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">All-in-one kits to start your journey into robotics.</p>
+            <CardContent className="p-2">
+              <p className="text-xs text-muted-foreground">All-in-one kits to start your journey into robotics.</p>
             </CardContent>
           </Card>
-          <Card className="flex flex-col items-center text-center">
-            <CardHeader>
-              <CircuitBoard className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="font-headline">Components</CardTitle>
+          <Card className="flex flex-col items-center text-center p-2">
+            <CardHeader className="p-2">
+              <CircuitBoard className="mx-auto h-8 w-8 text-primary" />
+              <CardTitle className="font-headline text-base">Components</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">A wide range of sensors, motors, and controllers.</p>
+            <CardContent className="p-2">
+              <p className="text-xs text-muted-foreground">A wide range of sensors, motors, and controllers.</p>
             </CardContent>
           </Card>
-          <Card className="flex flex-col items-center text-center">
-            <CardHeader>
-              <Code className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="font-headline">Courses</CardTitle>
+          <Card className="flex flex-col items-center text-center p-2">
+            <CardHeader className="p-2">
+              <Code className="mx-auto h-8 w-8 text-primary" />
+              <CardTitle className="font-headline text-base">Courses</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Learn from experts and master new skills in robotics.</p>
+            <CardContent className="p-2">
+              <p className="text-xs text-muted-foreground">Learn from experts and master new skills in robotics.</p>
             </CardContent>
           </Card>
-          <Card className="flex flex-col items-center text-center">
-            <CardHeader>
-              <Bot className="mx-auto h-12 w-12 text-primary" />
-              <CardTitle className="font-headline">AI Hub</CardTitle>
+          <Card className="flex flex-col items-center text-center p-2">
+            <CardHeader className="p-2">
+              <Bot className="mx-auto h-8 w-8 text-primary" />
+              <CardTitle className="font-headline text-base">AI Hub</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Get personalized recommendations for your projects.</p>
+            <CardContent className="p-2">
+              <p className="text-xs text-muted-foreground">Get personalized recommendations for your projects.</p>
             </CardContent>
           </Card>
         </div>
