@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { usePathname } from "next/navigation";
+// Removed: import { RoboxcraftLogo } from "./roboxcraft-logo";
 
 import { Input } from "./ui/input";
-import { RoboxcraftLogo } from "./roboxcraft-logo";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -18,7 +18,12 @@ export function SiteHeader() {
     <header className="fixed top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto flex h-20 max-w-7xl items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2">
-          <RoboxcraftLogo className="h-10 w-10 text-primary" />
+          {/* Replaced RoboxcraftLogo with an <img> tag pointing to the new path */}
+          <img
+            src="/images/roboxcraft-logo.jpeg"
+            alt="Roboxcraft Logo"
+            className="h-10 w-10 text-primary object-contain"
+          />
         </Link>
 
         <div className="flex-1">

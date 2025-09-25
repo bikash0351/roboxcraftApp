@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages as placeholderImages } from '@/lib/placeholder-images';
 import { products, courses } from '@/lib/data';
 import { ProductCard } from '@/components/product-card';
-import AiRecommendations from '@/components/ai-recommendations';
 
 export default function Home() {
   const heroImage = placeholderImages.find(p => p.id === 'hero-image');
@@ -111,7 +110,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
         <h2 className="font-headline text-3xl font-bold tracking-tight">Popular Courses</h2>
         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {courses.map(course => {
@@ -142,10 +141,6 @@ export default function Home() {
             )
           })}
         </div>
-      </section>
-
-      <section className="container mx-auto mb-16 max-w-7xl px-4 sm:px-6 lg:px-8 md:mb-24">
-        <AiRecommendations />
       </section>
     </div>
   );
