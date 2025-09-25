@@ -35,8 +35,8 @@ export default function RootLayout({
             )}>
               {children}
             </main>
-            <ContentFooter />
-            {!isReelsPage && <SiteFooter />}
+            {!isReelsPage && <ContentFooter />}
+            <SiteFooter />
           </div>
           <Toaster />
         </CartProvider>
