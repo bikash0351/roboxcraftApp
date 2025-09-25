@@ -1,7 +1,16 @@
+
+"use client"
 import { RoboxcraftLogo } from "./roboxcraft-logo";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function ContentFooter() {
+    const [year, setYear] = useState(new Date().getFullYear());
+
+    useEffect(() => {
+        setYear(new Date().getFullYear());
+    }, []);
+
     return (
         <footer className="bg-secondary text-secondary-foreground">
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -28,7 +37,7 @@ export function ContentFooter() {
                 </div>
                 <div className="mt-8 border-t border-secondary-foreground/20 pt-6 text-center text-sm">
                     <p>Made With ❤️ By RoboxCraft Team</p>
-                    <p>Copyright &copy; {new Date().getFullYear()} RoboXCraft</p>
+                    <p>Copyright &copy; {year} RoboXCraft</p>
                 </div>
             </div>
         </footer>
