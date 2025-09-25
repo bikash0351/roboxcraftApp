@@ -15,7 +15,7 @@ export const RoboxcraftLogo = ({ className }: { className?: string }) => {
             <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
-            <text x="5" y="16" fontFamily="Arial, sans-serif" fontSize="8" fill="white" fontWeight="bold">R</text>
+            <text x="50%" y="65%" dominantBaseline="middle" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="8" fill="white" fontWeight="bold">R</text>
         </svg>
     );
 };

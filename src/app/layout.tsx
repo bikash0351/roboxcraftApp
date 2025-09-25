@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { CartProvider } from '@/components/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { usePathname } from 'next/navigation';
+import { ContentFooter } from '@/components/content-footer';
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
             )}>
               {children}
             </main>
+            <ContentFooter />
             <SiteFooter />
           </div>
           <Toaster />
