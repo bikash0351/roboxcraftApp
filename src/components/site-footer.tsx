@@ -18,10 +18,6 @@ export function SiteFooter() {
   const pathname = usePathname();
   const { totalItems } = useCart();
 
-  if (pathname === "/reels") {
-    return null;
-  }
-
   return (
     <footer className="fixed bottom-0 z-40 w-full border-t bg-background/95 backdrop-blur-sm md:hidden">
       <nav className="flex h-16 items-center justify-around">

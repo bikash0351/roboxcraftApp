@@ -31,7 +31,7 @@ export default function RootLayout({
             <main className={cn(
               "flex-1",
               isReelsPage ? "pt-0" : "pt-24",
-              isReelsPage ? "pb-0" : "pb-20",
+              "pb-20 md:pb-0"
             )}>
               {children}
             </main>
