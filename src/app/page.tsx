@@ -45,7 +45,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col gap-16 md:gap-24">
+    <div className="flex flex-col gap-12 md:gap-16">
       <section className="w-full relative">
         <Carousel
           setApi={setApi}
