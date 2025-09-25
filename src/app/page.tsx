@@ -1,3 +1,6 @@
+
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Bot, CircuitBoard, Code, ToyBrick } from 'lucide-react';
@@ -6,27 +9,52 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages as placeholderImages } from '@/lib/placeholder-images';
 import { products, courses } from '@/lib/data';
 import { ProductCard } from '@/components/product-card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import React from 'react';
 
 export default function Home() {
-  const heroImage = placeholderImages.find(p => p.id === 'hero-image');
   const kits = products.filter(p => p.category === 'Kits').slice(0, 4);
   const components = products.filter(p => p.category === 'Components').slice(0, 4);
+  const posters = placeholderImages.filter(p => p.id.startsWith('hero-poster-'));
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
 
   return (
     <div className="flex flex-col gap-16 md:gap-24">
       <section className="relative h-[60vh] w-full">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
-            fill
-            className="object-cover"
-            priority
-            data-ai-hint={heroImage.imageHint}
-          />
-        )}
+        <Carousel
+          plugins={[plugin.current]}
+          className="w-full h-full"
+          onMouseEnter={plugin.current.stop}
+          onMouseLeave={plugin.current.reset}
+        >
+          <CarouselContent>
+            {posters.map((poster) => (
+              <CarouselItem key={poster.id}>
+                <div className="relative h-[60vh] w-full">
+                  <Image
+                    src={poster.imageUrl}
+                    alt={poster.description}
+                    fill
+                    className="object-cover"
+                    priority={posters.indexOf(poster) === 0}
+                    data-ai-hint={poster.imageHint}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-6 text-center text-primary-foreground">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-6 text-center text-primary-foreground -mt-[60vh]">
           <h1 className="font-headline text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
             Build The Future, One Component at a Time
           </h1>
@@ -145,3 +173,4 @@ export default function Home() {
     </div>
   );
 }
+    

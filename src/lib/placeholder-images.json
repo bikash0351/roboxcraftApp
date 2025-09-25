@@ -1,6 +1,24 @@
 {
   "placeholderImages": [
     {
+      "id": "hero-poster-1",
+      "description": "A close-up of a sophisticated robotic hand with intricate wiring.",
+      "imageUrl": "https://images.unsplash.com/photo-1715059250871-08786b8a884a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cm9ib3RpYyUyMGhhbmR8ZW58MHx8fHwxNzU4Nzc2Nzk3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robotic hand"
+    },
+    {
+      "id": "hero-poster-2",
+      "description": "A sleek drone flying over a modern cityscape at sunset.",
+      "imageUrl": "https://images.unsplash.com/photo-1706272730144-7b51588935f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkcm9uZSUyMGNpdHlzY2FwZXxlbnwwfHx8fDE3NTg3OTQ5NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "drone cityscape"
+    },
+    {
+      "id": "hero-poster-3",
+      "description": "An assembly line of robotic arms working in a futuristic factory.",
+      "imageUrl": "https://images.unsplash.com/photo-1735494034604-cab3f6a42683?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cm9ib3RpYyUyMGZhY3Rvcnl8ZW58MHx8fHwxNzU4Nzk0OTQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robotic factory"
+    },
+    {
       "id": "hero-image",
       "description": "A futuristic robotic arm assembling a complex circuit board.",
       "imageUrl": "https://images.unsplash.com/photo-1647427060118-4911c9821b82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyb2JvdGljJTIwYXJtfGVufDB8fHx8MTc1ODcxNzQ5NHww&ixlib=rb-4.1.0&q=80&w=1080",
