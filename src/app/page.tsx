@@ -28,23 +28,23 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-16 md:gap-24">
-      <section className="relative h-[60vh] w-full">
+      <section className="w-full">
         <Carousel
           plugins={[plugin.current]}
-          className="w-full h-full"
+          className="w-full"
           onMouseEnter={plugin.current.stop}
           onMouseLeave={plugin.current.reset}
         >
           <CarouselContent>
-            {posters.map((poster) => (
+            {posters.map((poster, index) => (
               <CarouselItem key={poster.id}>
-                <div className="relative h-[60vh] w-full">
+                <div className="relative w-full aspect-video">
                   <Image
                     src={poster.imageUrl}
                     alt={poster.description}
                     fill
                     className="object-cover"
-                    priority={posters.indexOf(poster) === 0}
+                    priority={index === 0}
                     data-ai-hint={poster.imageHint}
                   />
                 </div>
