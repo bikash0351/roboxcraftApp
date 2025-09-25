@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShoppingCart } from "lucide-react";
+import { Search } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { RoboxcraftLogo } from "./roboxcraft-logo";
 
@@ -27,18 +26,6 @@ export function SiteHeader() {
             <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
-
-        <Button asChild variant="ghost" className="relative h-10 w-10">
-          <Link href="/cart">
-            <ShoppingCart className="h-6 w-6" />
-            <span className="sr-only">Cart</span>
-            {totalItems > 0 && (
-              <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                {totalItems}
-              </span>
-            )}
-          </Link>
-        </Button>
       </div>
     </header>
   );
