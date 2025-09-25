@@ -31,7 +31,7 @@ export default function RootLayout({
             <SiteHeader />
             <main className={cn(
               "flex-1",
-              isReelsPage ? "pt-0" : "pt-24"
+              !isReelsPage && "pt-24" 
             )}>
               {children}
             </main>
