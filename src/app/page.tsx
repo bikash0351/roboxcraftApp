@@ -52,21 +52,6 @@ export default function Home() {
             ))}
           </CarouselContent>
         </Carousel>
-
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-6 text-center text-primary-foreground -mt-[60vh]">
-          <h1 className="font-headline text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-            Build The Future, One Component at a Time
-          </h1>
-          <p className="max-w-3xl text-lg text-primary-foreground/80 md:text-xl">
-            Discover a universe of high-quality robotic parts, kits, and educational resources. Your next creation starts here.
-          </p>
-          <Button asChild size="lg" className="font-headline text-lg">
-            <Link href="/shop">
-              Explore Shop <ArrowRight className="ml-2" />
-            </Link>
-          </Button>
-        </div>
       </section>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
