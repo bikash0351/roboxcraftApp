@@ -32,12 +32,12 @@ export default function RootLayout({
             <main className={cn(
               "flex-1",
               isReelsPage ? "pt-0" : "pt-24",
-              "pb-20 md:pb-0"
+              "pb-16" // Added padding to the bottom
             )}>
               {children}
             </main>
             <ContentFooter />
-            <SiteFooter />
+            {!isReelsPage && <SiteFooter />}
           </div>
           <Toaster />
         </CartProvider>

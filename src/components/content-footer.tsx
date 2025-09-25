@@ -27,7 +27,8 @@ export function ContentFooter() {
                     </div>
                 </div>
                 <div className="mt-8 border-t border-secondary-foreground/20 pt-6 text-center text-sm">
-                    <p>Made With❤️By RoboxCraft Team, Copyright &copy; {new Date().getFullYear()} RoboXCraft</p>
+                    <p>Made With ❤️ By RoboxCraft Team</p>
+                    <p>Copyright &copy; {new Date().getFullYear()} RoboXCraft</p>
                 </div>
             </div>
         </footer>
