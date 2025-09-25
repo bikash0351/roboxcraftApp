@@ -54,8 +54,9 @@ export default function Home() {
         </Carousel>
       </section>
 
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-4">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 className="font-headline text-3xl font-bold tracking-tight text-center">Explore Our Universe</h2>
+        <div className="mt-6 grid grid-cols-2 gap-4">
           <Card className="flex flex-col items-center text-center p-2">
             <CardHeader className="p-2">
               <ToyBrick className="mx-auto h-8 w-8 text-primary" />
@@ -93,7 +94,7 @@ export default function Home() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </section>
       
       <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
