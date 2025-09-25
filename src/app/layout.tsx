@@ -1,21 +1,21 @@
-import type { Metadata } from 'next';
+
+'use client';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { CartProvider } from '@/components/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
-
-export const metadata: Metadata = {
-  title: 'RoboXCraft',
-  description: 'Crafting Imagination into Reality',
-};
+import { usePathname } from 'next/navigation';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isReelsPage = pathname === '/reels';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -28,7 +28,13 @@ export default function RootLayout({
         <CartProvider>
           <div className="relative flex min-h-dvh flex-col bg-background">
             <SiteHeader />
-            <main className="flex-1 pb-20 pt-24">{children}</main>
+            <main className={cn(
+              "flex-1",
+              isReelsPage ? "pt-0" : "pt-24",
+              isReelsPage ? "pb-0" : "pb-20",
+            )}>
+              {children}
+            </main>
             <SiteFooter />
           </div>
           <Toaster />

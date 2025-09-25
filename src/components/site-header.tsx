@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
+import { usePathname } from "next/navigation";
+
 import { Input } from "./ui/input";
 import { RoboxcraftLogo } from "./roboxcraft-logo";
 
 export function SiteHeader() {
-  const { totalItems } = useCart();
+  const pathname = usePathname();
+
+  if (pathname === "/reels") {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
