@@ -25,14 +25,13 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={cn('font-body antialiased')}>
+      <body className={cn('font-body antialiased pb-16 md:pb-0')}>
         <CartProvider>
           <div className="relative flex min-h-dvh flex-col bg-background">
             <SiteHeader />
             <main className={cn(
               "flex-1",
-              isReelsPage ? "pt-0" : "pt-24",
-              "pb-16" // Added padding to the bottom
+              isReelsPage ? "pt-0" : "pt-24"
             )}>
               {children}
             </main>
