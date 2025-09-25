@@ -1,3 +1,130 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "A futuristic robotic arm assembling a complex circuit board.",
+      "imageUrl": "https://images.unsplash.com/photo-1647427060118-4911c9821b82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyb2JvdGljJTIwYXJtfGVufDB8fHx8MTc1ODcxNzQ5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robotic arm"
+    },
+    {
+      "id": "kit-arduino",
+      "description": "An Arduino Uno starter kit with various components.",
+      "imageUrl": "https://images.unsplash.com/photo-1673475957733-66e9ca828791?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhcmR1aW5vJTIwa2l0fGVufDB8fHx8MTc1ODc4NTgwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arduino kit"
+    },
+    {
+      "id": "kit-raspberry-pi",
+      "description": "A Raspberry Pi 4 robotics kit with a chassis and camera.",
+      "imageUrl": "https://images.unsplash.com/photo-1586920740142-346aea2a2124?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxyYXNwYmVycnklMjBwaXxlbnwwfHx8fDE3NTg3NzQyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "raspberry pi"
+    },
+    {
+      "id": "kit-self-balancing",
+      "description": "A two-wheeled self-balancing robot.",
+      "imageUrl": "https://images.unsplash.com/photo-1755631036833-8595162dd535?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxiYWxhbmNpbmclMjByb2JvdHxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "balancing robot"
+    },
+    {
+      "id": "kit-robotic-arm",
+      "description": "A 4-DOF acrylic robotic arm.",
+      "imageUrl": "https://images.unsplash.com/photo-1563968743333-044cef800494?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyb2JvdGljJTIwYXJtfGVufDB8fHx8MTc1ODcxNzQ5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robotic arm"
+    },
+    {
+      "id": "kit-obstacle-car",
+      "description": "An obstacle avoiding car robot.",
+      "imageUrl": "https://images.unsplash.com/photo-1596877930059-f1a29a909c1e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyb2JvdCUyMGNhcnxlbnwwfHx8fDE3NTg3ODU4MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robot car"
+    },
+    {
+      "id": "kit-spider-robot",
+      "description": "A hexapod spider robot.",
+      "imageUrl": "https://images.unsplash.com/photo-1730315269828-38afc22c5d75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzcGlkZXIlMjByb2JvdHxlbnwwfHx8fDE3NTg3ODU4MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spider robot"
+    },
+    {
+      "id": "component-servo",
+      "description": "A small blue SG90 micro servo motor.",
+      "imageUrl": "https://images.unsplash.com/photo-1640556795357-71d4078d6228?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzZXJ2byUyMG1vdG9yfGVufDB8fHx8MTc1ODc4NTgwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "servo motor"
+    },
+    {
+      "id": "component-ultrasonic",
+      "description": "An HC-SR04 ultrasonic distance sensor.",
+      "imageUrl": "https://images.unsplash.com/photo-1665436766584-20909f2c1959?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx1bHRyYXNvbmljJTIwc2Vuc29yfGVufDB8fHx8MTc1ODc4NTgwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ultrasonic sensor"
+    },
+    {
+      "id": "component-motor-driver",
+      "description": "An L298N dual H-bridge motor driver module.",
+      "imageUrl": "https://images.unsplash.com/photo-1739801164932-e5c77a3617eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtb3RvciUyMGRyaXZlcnxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "motor driver"
+    },
+    {
+      "id": "component-esp32",
+      "description": "An ESP32-CAM module with a camera.",
+      "imageUrl": "https://images.unsplash.com/photo-1589512951628-c2886d568a8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxlc3AzMiUyMGNhbWVyYXxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "esp32 camera"
+    },
+    {
+      "id": "component-gyro",
+      "description": "An MPU-6050 gyroscope and accelerometer module.",
+      "imageUrl": "https://images.unsplash.com/photo-1628054330566-5552b7b25523?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxneXJvc2NvcGV8ZW58MHx8fHwxNzU4Nzg1ODAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gyroscope"
+    },
+    {
+      "id": "component-geared-motor",
+      "description": "A yellow DC geared motor with a wheel.",
+      "imageUrl": "https://images.unsplash.com/photo-1569718997576-8ea7573d0abd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnZWFyZWQlMjBtb3RvcnxlbnwwfHx8fDE3NTg3ODU4MDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "geared motor"
+    },
+    {
+      "id": "course-arduino",
+      "description": "A person working on an Arduino project.",
+      "imageUrl": "https://images.unsplash.com/photo-1570037165493-6c0fbb3e0af7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxhcmR1aW5vJTIwcHJvamVjdHxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arduino project"
+    },
+    {
+      "id": "course-raspberry-pi",
+      "description": "A complex robot powered by a Raspberry Pi.",
+      "imageUrl": "https://images.unsplash.com/photo-1589254066007-898d52d910d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaSUyMHJvYm90fGVufDB8fHx8MTc1ODc4NTgwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pi robot"
+    },
+    {
+      "id": "course-3d-printing",
+      "description": "A 3D printer creating a robotic part.",
+      "imageUrl": "https://images.unsplash.com/photo-1706895247302-20d321119c1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHwzZCUyMHByaW50ZXJ8ZW58MHx8fHwxNzU4Njk1OTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "3d printer"
+    },
+    {
+      "id": "user-avatar",
+      "description": "Avatar for the main user.",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg2OTE2MTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "Avatar for user TechieTom.",
+      "imageUrl": "https://images.unsplash.com/photo-1624395213043-fa2e123b2656?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg3MDg5NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "Avatar for user CircuitChloe.",
+      "imageUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d29tYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg3NTEzMjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "user-avatar-3",
+      "description": "Avatar for user RoboRachel.",
+      "imageUrl": "https://images.unsplash.com/photo-1676875170595-2ef5c33f2e84?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b21hbiUyMHN1bmdsYXNzZXN8ZW58MHx8fHwxNzU4NzY1NjIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman sunglasses"
+    },
+    {
+      "id": "ai-product",
+      "description": "Generic placeholder for AI recommended products.",
+      "imageUrl": "https://images.unsplash.com/photo-1641312874336-6279a832a3dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxyb2JvdCUyMGNvbXBvbmVudHxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robot component"
+    }
+  ]
 }
