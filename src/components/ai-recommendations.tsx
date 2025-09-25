@@ -59,6 +59,7 @@ export default function AiRecommendations() {
         id: `rec-${index}`,
         name: p.name,
         price: p.price,
+        originalPrice: p.originalPrice,
         imageId: 'ai-product', // Generic image for AI recommended products
         category: 'Recommendation'
       }));
@@ -133,12 +134,13 @@ export default function AiRecommendations() {
         {recommendations.length > 0 && (
           <div className="mt-12">
             <h3 className="font-headline text-2xl font-bold">Here are your recommendations:</h3>
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
               {recommendations.map((product, index) => (
                 <ProductCard key={index} product={{
                   id: `rec-${index}`,
                   name: product.name,
                   price: product.price,
+                  originalPrice: product.originalPrice,
                   imageId: 'ai-product',
                   category: 'Recommendation',
                   description: product.description,

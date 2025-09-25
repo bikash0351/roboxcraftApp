@@ -2,17 +2,27 @@ import { ProductCard } from '@/components/product-card';
 import { products } from '@/lib/data';
 
 export default function ShopPage() {
+  const kits = products.filter((p) => p.category === 'Kits');
+  const components = products.filter((p) => p.category === 'Components');
+
   return (
     <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="font-headline text-3xl font-bold tracking-tight md:text-4xl">
-        All Products
+      <h1 className="font-headline text-2xl font-bold tracking-tight md:text-3xl text-center">
+        Complete Kits
       </h1>
-      <p className="mt-2 text-lg text-muted-foreground">
-        Browse our full catalog of robotic kits and components.
-      </p>
+      
+      <div className="mt-6 grid grid-cols-2 gap-4">
+        {kits.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {products.map((product) => (
+      <h1 className="font-headline text-2xl font-bold tracking-tight md:text-3xl text-center mt-12">
+        Components
+      </h1>
+
+      <div className="mt-6 grid grid-cols-2 gap-4">
+        {components.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

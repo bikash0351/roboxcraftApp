@@ -26,6 +26,7 @@ const ProductRecommendationsOutputSchema = z.object({
       description: z.string().describe('A short description of the product.'),
       imageUrl: z.string().describe('URL of the product image.'),
       price: z.number().describe('The price of the product.'),
+      originalPrice: z.number().optional().describe('The original price of the product before discount.')
     })
   ).describe('A list of recommended products.'),
 });
@@ -47,7 +48,7 @@ const productRecommendationsPrompt = ai.definePrompt({
   User Browsing History: {{{browsingHistory}}}
   User Preferences: {{{preferences}}}
 
-  Return a JSON array of products with name, description, imageUrl, and price.
+  Return a JSON array of products with name, description, imageUrl, price, and an optional originalPrice if there is a discount.
   `,
   config: {
     safetySettings: [

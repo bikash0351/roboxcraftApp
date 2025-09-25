@@ -90,7 +90,7 @@ export default function Home() {
             <Link href="/shop">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {kits.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -104,7 +104,7 @@ export default function Home() {
             <Link href="/shop">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {components.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
