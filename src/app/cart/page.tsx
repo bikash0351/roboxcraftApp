@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -44,7 +45,7 @@ export default function CartPage() {
                                                 src={productImage.imageUrl} 
                                                 alt={item.name} 
                                                 fill 
-                                                className="object-contain"
+                                                className="object-cover"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 data-ai-hint={productImage.imageHint}
                                             />
@@ -96,7 +97,9 @@ export default function CartPage() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button className="w-full">Proceed to Checkout</Button>
+                            <Button className="w-full" asChild>
+                                <Link href="/checkout">Proceed to Checkout</Link>
+                            </Button>
                         </CardFooter>
                     </Card>
                 </div>
