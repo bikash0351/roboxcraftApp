@@ -50,9 +50,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             </div>
             <span className="text-sm text-muted-foreground">(123 reviews)</span>
           </div>
-          <p className="mt-4 text-muted-foreground">
-            A brief, compelling description of the product would go here. It would highlight the key features and benefits for the customer.
-          </p>
+          
           <div className="mt-4 flex items-baseline gap-2">
             {hasDiscount && (
               <span className="text-xl text-muted-foreground line-through">
@@ -70,6 +68,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <AddToCartButton product={product} />
             <Button size="lg" className="w-full sm:w-auto">Buy Now</Button>
           </div>
+
+          <p className="mt-6 text-muted-foreground">
+            A brief, compelling description of the product would go here. It would highlight the key features and benefits for the customer.
+          </p>
         </div>
       </div>
 
