@@ -1,15 +1,27 @@
+
 "use client";
 
 import { useState, createContext, useEffect, type ReactNode } from "react";
-import type { Product } from "@/lib/data";
 
-export interface CartItem extends Product {
+// The Product type needs an imageId for the cart, but the new structure has imageIds.
+// We'll create a modified Product type for the cart context.
+export interface ProductInCart {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  imageIds: string[];
+  imageId: string; // To ensure compatibility with cart logic
+  category: 'Kits' | 'Components' | 'Recommendation';
+}
+
+export interface CartItem extends ProductInCart {
   quantity: number;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
+  addItem: (product: ProductInCart, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -25,15 +37,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedCart = localStorage.getItem('robomart-cart');
     if (storedCart) {
-      setItems(JSON.parse(storedCart));
+      try {
+        const parsedCart = JSON.parse(storedCart);
+        // Basic validation to prevent crashes if stored data is malformed
+        if (Array.isArray(parsedCart)) {
+          setItems(parsedCart);
+        }
+      } catch (error) {
+        console.error("Failed to parse cart from localStorage", error);
+        setItems([]);
+      }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('robomart-cart', JSON.stringify(items));
+    try {
+      localStorage.setItem('robomart-cart', JSON.stringify(items));
+    } catch (error) {
+      console.error("Failed to save cart to localStorage", error);
+    }
   }, [items]);
 
-  const addItem = (product: Product, quantity = 1) => {
+  const addItem = (product: ProductInCart, quantity = 1) => {
     setItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {

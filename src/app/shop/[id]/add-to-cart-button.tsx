@@ -11,7 +11,11 @@ export function AddToCartButton({ product }: { product: Product }) {
   const { toast } = useToast();
 
   const handleAddToCart = () => {
-    addItem(product);
+    const productToAdd = {
+      ...product,
+      imageId: product.imageIds[0] // Use the first image for the cart
+    };
+    addItem(productToAdd);
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,

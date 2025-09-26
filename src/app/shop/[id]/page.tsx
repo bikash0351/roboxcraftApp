@@ -1,7 +1,10 @@
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { useState } from "react";
 import { ArrowRight, Star } from "lucide-react";
 
 import { products } from "@/lib/data";
@@ -10,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "@/components/product-card";
 import { AddToCartButton } from "./add-to-cart-button";
+import { cn } from "@/lib/utils";
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const product = products.find((p) => p.id === params.id);
@@ -18,7 +22,14 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     notFound();
   }
 
-  const productImage = placeholderImages.find((p) => p.id === product.imageId);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const productImages = product.imageIds
+    .map((id) => placeholderImages.find((p) => p.id === id))
+    .filter(Boolean);
+
+  const selectedImage = productImages[selectedImageIndex];
+
   const relatedProducts = products.filter(
     (p) => p.category === product.category && p.id !== product.id
   ).slice(0, 4);
@@ -28,16 +39,46 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   return (
     <div className="container mx-auto max-w-5xl py-8 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted">
-          {productImage && (
-            <Image
-              src={productImage.imageUrl}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              data-ai-hint={productImage.imageHint}
-            />
+        <div>
+          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted">
+            {selectedImage && (
+              <Image
+                src={selectedImage.imageUrl}
+                alt={product.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                data-ai-hint={selectedImage.imageHint}
+                priority
+              />
+            )}
+          </div>
+          {productImages.length > 1 && (
+            <div className="mt-4 grid grid-cols-5 gap-2">
+              {productImages.map((image, index) => (
+                image && (
+                  <button
+                    key={image.id}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={cn(
+                      "relative aspect-square w-full rounded-md overflow-hidden transition-all",
+                      index === selectedImageIndex
+                        ? "ring-2 ring-primary ring-offset-2"
+                        : "opacity-70 hover:opacity-100"
+                    )}
+                  >
+                    <Image
+                      src={image.imageUrl}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="20vw"
+                      data-ai-hint={image.imageHint}
+                    />
+                  </button>
+                )
+              ))}
+            </div>
           )}
         </div>
         <div className="flex flex-col justify-center">
@@ -69,9 +110,13 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <Button size="lg" className="w-full sm:w-auto">Buy Now</Button>
           </div>
 
-          <p className="mt-6 text-muted-foreground">
-            A brief, compelling description of the product would go here. It would highlight the key features and benefits for the customer.
-          </p>
+          <div className="mt-8">
+            <h2 className="text-xl font-bold font-headline">Description</h2>
+            <p className="mt-4 text-muted-foreground">
+              A brief, compelling description of the product would go here. It would highlight the key features and benefits for the customer.
+            </p>
+          </div>
+
         </div>
       </div>
 

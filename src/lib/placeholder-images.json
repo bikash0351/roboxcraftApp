@@ -31,9 +31,27 @@
       "imageHint": "arduino kit"
     },
     {
+      "id": "kit-arduino-2",
+      "description": "Side view of an Arduino Uno starter kit.",
+      "imageUrl": "https://images.unsplash.com/photo-1580881999219-5e8e67a12d7b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhcmR1aW5vJTIwa2l0fGVufDB8fHx8MTc1ODc4NTgwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arduino kit"
+    },
+    {
+      "id": "kit-arduino-3",
+      "description": "Close up of an Arduino Uno starter kit.",
+      "imageUrl": "https://images.unsplash.com/photo-1639086857695-49d3e978a919?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcmR1aW5vJTIwa2l0fGVufDB8fHx8MTc1ODc4NTgwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arduino kit"
+    },
+    {
       "id": "kit-raspberry-pi",
       "description": "A Raspberry Pi 4 robotics kit with a chassis and camera.",
       "imageUrl": "https://images.unsplash.com/photo-1586920740142-346aea2a2124?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxyYXNwYmVycnklMjBwaXxlbnwwfHx8fDE3NTg3NzQyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "raspberry pi"
+    },
+    {
+      "id": "kit-raspberry-pi-2",
+      "description": "A Raspberry Pi 4 robotics kit top view.",
+      "imageUrl": "https://images.unsplash.com/photo-1631553127988-36343ac5bb0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxyYXNwYmVycnklMjBwaXxlbnwwfHx8fDE3NTg3NzQyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "raspberry pi"
     },
     {
@@ -43,9 +61,21 @@
       "imageHint": "balancing robot"
     },
     {
+      "id": "kit-self-balancing-2",
+      "description": "A two-wheeled self-balancing robot side view.",
+      "imageUrl": "https://images.unsplash.com/photo-1669985669434-d26dce26ea5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxiYWxhbmNpbmclMjByb2JvdHxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "balancing robot"
+    },
+    {
       "id": "kit-robotic-arm",
       "description": "A 4-DOF acrylic robotic arm.",
       "imageUrl": "https://images.unsplash.com/photo-1563968743333-044cef800494?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyb2JvdGljJTIwYXJtfGVufDB8fHx8MTc1ODcxNzQ5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robotic arm"
+    },
+    {
+      "id": "kit-robotic-arm-2",
+      "description": "A 4-DOF acrylic robotic arm in action.",
+      "imageUrl": "https://images.unsplash.com/photo-1563968743333-044cef800494?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyb2JvdGljJTIwYXJtfGVufDB8fHx8MTc1ODg0MzA3MXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "robotic arm"
     },
     {
@@ -55,9 +85,21 @@
       "imageHint": "robot car"
     },
     {
+      "id": "kit-obstacle-car-2",
+      "description": "An obstacle avoiding car robot, top view.",
+      "imageUrl": "https://images.unsplash.com/photo-1658243762621-95b2c50e9683?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxyb2JvdCUyMGNhcnxlbnwwfHx8fDE3NTg3ODU4MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "robot car"
+    },
+    {
       "id": "kit-spider-robot",
       "description": "A hexapod spider robot.",
       "imageUrl": "https://images.unsplash.com/photo-1730315269828-38afc22c5d75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzcGlkZXIlMjByb2JvdHxlbnwwfHx8fDE3NTg3ODU4MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spider robot"
+    },
+    {
+      "id": "kit-spider-robot-2",
+      "description": "A hexapod spider robot walking.",
+      "imageUrl": "https://images.unsplash.com/photo-1730315269768-4a1cedbc0575?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzcGlkZXIlMjByb2JvdHxlbnwwfHx8fDE3NTg3ODU4MDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "spider robot"
     },
     {
@@ -67,9 +109,21 @@
       "imageHint": "servo motor"
     },
     {
+      "id": "component-servo-2",
+      "description": "A small blue SG90 micro servo motor group.",
+      "imageUrl": "https://images.unsplash.com/photo-1609872209699-3e55dc7d90b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzZXJ2byUyMG1vdG9yfGVufDB8fHx8MTc1ODc4NTgwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "servo motor"
+    },
+    {
       "id": "component-ultrasonic",
       "description": "An HC-SR04 ultrasonic distance sensor.",
       "imageUrl": "https://images.unsplash.com/photo-1665436766584-20909f2c1959?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx1bHRyYXNvbmljJTIwc2Vuc29yfGVufDB8fHx8MTc1ODc4NTgwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ultrasonic sensor"
+    },
+    {
+      "id": "component-ultrasonic-2",
+      "description": "An HC-SR04 ultrasonic distance sensor in a project.",
+      "imageUrl": "https://images.unsplash.com/photo-1733336911172-0e644ca6b4a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx1bHRyYXNvbmljJTIwc2Vuc29yfGVufDB8fHx8MTc1ODc4NTgwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ultrasonic sensor"
     },
     {
@@ -79,9 +133,21 @@
       "imageHint": "motor driver"
     },
     {
+      "id": "component-motor-driver-2",
+      "description": "An L298N dual H-bridge motor driver module wired.",
+      "imageUrl": "https://images.unsplash.com/photo-1739801164885-cb12b69cfbb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtb3RvciUyMGRyaXZlcnxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "motor driver"
+    },
+    {
       "id": "component-esp32",
       "description": "An ESP32-CAM module with a camera.",
       "imageUrl": "https://images.unsplash.com/photo-1589512951628-c2886d568a8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxlc3AzMiUyMGNhbWVyYXxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "esp32 camera"
+    },
+    {
+      "id": "component-esp32-2",
+      "description": "An ESP32-CAM module, back view.",
+      "imageUrl": "https://images.unsplash.com/photo-1709666256127-d585532045ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlc3AzMiUyMGNhbWVyYXxlbnwwfHx8fDE3NTg3ODU4MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "esp32 camera"
     },
     {
@@ -91,9 +157,21 @@
       "imageHint": "gyroscope"
     },
     {
+      "id": "component-gyro-2",
+      "description": "An MPU-6050 gyroscope and accelerometer module in hand.",
+      "imageUrl": "https://images.unsplash.com/photo-1628054558780-09439bb1423d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxneXJvc2NvcGV8ZW58MHx8fHwxNzU4Nzg1ODAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gyroscope"
+    },
+    {
       "id": "component-geared-motor",
       "description": "A yellow DC geared motor with a wheel.",
       "imageUrl": "https://images.unsplash.com/photo-1569718997576-8ea7573d0abd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnZWFyZWQlMjBtb3RvcnxlbnwwfHx8fDE3NTg3ODU4MDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "geared motor"
+    },
+    {
+      "id": "component-geared-motor-2",
+      "description": "A yellow DC geared motor.",
+      "imageUrl": "https://images.unsplash.com/photo-1573864698664-4a1fd0c97b46?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxnZWFyZWQlMjBtb3RvcnxlbnwwfHx8fDE3NTg3ODU4MDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "geared motor"
     },
     {

@@ -20,7 +20,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
 
-  const productImage = placeholderImages.find((p) => p.id === product.imageId);
+  // Use the first image in the array for the card
+  const primaryImageId = product.imageIds ? product.imageIds[0] : 'ai-product';
+  const productImage = placeholderImages.find((p) => p.id === primaryImageId);
   const imageSrc = product.imageUrl || productImage?.imageUrl;
   const imageHint = productImage?.imageHint;
 
