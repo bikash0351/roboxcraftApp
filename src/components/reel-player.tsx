@@ -34,7 +34,7 @@ export function ReelPlayer({ reel }: ReelPlayerProps) {
             <div className="relative w-full aspect-[9/16] max-h-full">
                 <MockVideoPlayer reel={reel} />
 
-                <div className="absolute bottom-0 left-0 right-0 z-10 p-4 text-white bg-gradient-to-t from-black/60 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 z-10 p-4 pb-20 text-white bg-gradient-to-t from-black/60 to-transparent">
                     <div className="flex items-end gap-4">
                         <div className="flex-1">
                             <div className="flex items-center gap-2">
@@ -66,4 +66,3 @@ export function ReelPlayer({ reel }: ReelPlayerProps) {
         </div>
     );
 }
-
