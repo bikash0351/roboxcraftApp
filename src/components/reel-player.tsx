@@ -15,7 +15,7 @@ interface ReelPlayerProps {
 const MockVideoPlayer = ({ reel }: { reel: Reel }) => {
     return (
         <div className="absolute inset-0 bg-neutral-900 flex items-center justify-center">
-            <div className="w-full aspect-video bg-cover bg-center" style={{backgroundImage: `url(https://picsum.photos/seed/${reel.id}/1280/720)`}} data-ai-hint="robot video">
+            <div className="w-full aspect-[9/16] bg-cover bg-center" style={{backgroundImage: `url(https://picsum.photos/seed/${reel.id}/720/1280)`}} data-ai-hint="robot video">
                  <div className="w-full h-full bg-black/30" />
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -37,7 +37,7 @@ export function ReelPlayer({ reel }: ReelPlayerProps) {
                     <MockVideoPlayer reel={reel} />
 
                     {/* The content overlay has its own padding, and is absolutely positioned within the 9:16 container */}
-                    <div className="absolute bottom-0 left-0 right-0 z-10 p-4 text-white bg-gradient-to-t from-black/60 to-transparent">
+                    <div className="absolute bottom-0 left-0 right-0 z-10 p-4 pb-6 text-white bg-gradient-to-t from-black/60 to-transparent">
                         <div className="flex items-end gap-4">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
