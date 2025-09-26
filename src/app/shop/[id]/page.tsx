@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useState, use } from "react";
+import { useState } from "react";
 import { ArrowRight, Star } from "lucide-react";
 
 import { products } from "@/lib/data";
