@@ -1,23 +1,47 @@
+
+"use client";
+
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PlaceHolderImages as placeholderImages } from "@/lib/placeholder-images";
-import { ChevronRight, LogOut, MapPin, Package } from "lucide-react";
+import { ChevronRight, LogOut, MapPin, Package, Loader2 } from "lucide-react";
 
 export default function AccountPage() {
-    const userImage = placeholderImages.find(p => p.id === 'user-avatar');
+    const { user, loading, signOut } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.replace('/login');
+        }
+    }, [user, loading, router]);
+
+    if (loading || !user) {
+        return (
+            <div className="container mx-auto flex h-[60vh] flex-col items-center justify-center">
+                <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            </div>
+        );
+    }
+    
+    const userImage = user.photoURL;
+    const userInitial = user.displayName?.charAt(0) || user.email?.charAt(0) || "A";
+
 
     return (
         <div className="container mx-auto max-w-4xl py-8 px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center gap-4 md:flex-row md:items-start">
                 <Avatar className="h-24 w-24">
-                    {userImage && <AvatarImage src={userImage.imageUrl} alt="User Avatar" data-ai-hint={userImage.imageHint} />}
-                    <AvatarFallback>RR</AvatarFallback>
+                    {userImage && <AvatarImage src={userImage} alt={user.displayName || "User"} />}
+                    <AvatarFallback>{userInitial.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="text-center md:text-left">
-                    <h1 className="font-headline text-3xl font-bold">Robo Rick</h1>
-                    <p className="text-muted-foreground">rick@robomart.dev</p>
+                    <h1 className="font-headline text-3xl font-bold">{user.displayName || "User"}</h1>
+                    <p className="text-muted-foreground">{user.email}</p>
                 </div>
             </div>
 
@@ -44,7 +68,9 @@ export default function AccountPage() {
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                     </button>
                     <Separator />
-                    <button className="flex w-full items-center justify-between rounded-lg p-4 text-left text-destructive transition-colors hover:bg-destructive/10">
+                    <button 
+                        onClick={signOut}
+                        className="flex w-full items-center justify-between rounded-lg p-4 text-left text-destructive transition-colors hover:bg-destructive/10">
                         <div className="flex items-center gap-4">
                             <LogOut className="h-6 w-6" />
                             <span className="font-medium">Logout</span>

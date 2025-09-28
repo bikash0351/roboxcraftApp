@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Image from "next/image";
-import Link from "next/link";
 import { PlaceHolderImages as placeholderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Loader2 } from "lucide-react";
 
 const checkoutSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -31,6 +34,7 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutPage() {
+    const { user } = useAuth();
     const { items, totalPrice, clearCart } = useCart();
     const router = useRouter();
     const { toast } = useToast();
@@ -46,19 +50,68 @@ export default function CheckoutPage() {
     const form = useForm<z.infer<typeof checkoutSchema>>({
         resolver: zodResolver(checkoutSchema),
         defaultValues: {
+            fullName: user?.displayName || "",
+            email: user?.email || "",
             paymentMethod: "cod",
             country: "India"
         },
     });
 
-    function onSubmit(data: z.infer<typeof checkoutSchema>) {
-        console.log("Order submitted", data);
-        clearCart();
-        toast({
-            title: "Order Placed!",
-            description: "Thank you for your purchase.",
-        });
-        router.push("/order-confirmation");
+    useEffect(() => {
+        if (user) {
+            form.reset({
+                fullName: user.displayName || "",
+                email: user.email || "",
+                address: "",
+                city: "",
+                postalCode: "",
+                country: "India",
+                paymentMethod: "cod",
+            });
+        }
+    }, [user, form]);
+
+
+    async function onSubmit(data: z.infer<typeof checkoutSchema>) {
+        if (!user) {
+            toast({
+                variant: "destructive",
+                title: "Authentication Error",
+                description: "You must be logged in to place an order.",
+            });
+            router.push('/login?redirect=/checkout');
+            return;
+        }
+
+        try {
+            const orderData = {
+                userId: user.uid,
+                ...data,
+                items,
+                subtotal: totalPrice,
+                shipping: shippingCost,
+                total,
+                status: 'pending',
+                createdAt: new Date(),
+            };
+
+            await addDoc(collection(db, "orders"), orderData);
+
+            await clearCart();
+            toast({
+                title: "Order Placed!",
+                description: "Thank you for your purchase.",
+            });
+            router.push("/order-confirmation");
+
+        } catch (error) {
+            console.error("Error placing order:", error);
+            toast({
+                variant: "destructive",
+                title: "Order Failed",
+                description: "There was a problem placing your order. Please try again.",
+            });
+        }
     }
 
     if (items.length === 0) {
@@ -244,6 +297,7 @@ export default function CheckoutPage() {
                             </CardContent>
                         </Card>
                         <Button type="submit" className="w-full mt-6" size="lg" disabled={form.formState.isSubmitting}>
+                            {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Place Order"}
                             {form.formState.isSubmitting ? "Placing Order..." : "Place Order"}
                         </Button>
                     </div>
@@ -252,4 +306,3 @@ export default function CheckoutPage() {
         </div>
     );
 }
-

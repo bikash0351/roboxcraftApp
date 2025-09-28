@@ -8,6 +8,7 @@ import { CartProvider } from '@/components/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { usePathname } from 'next/navigation';
 import { ContentFooter } from '@/components/content-footer';
+import { AuthProvider } from '@/components/auth-provider';
 
 export default function RootLayout({
   children,
@@ -29,20 +30,22 @@ export default function RootLayout({
           'font-body antialiased',
           !isReelsPage && 'pb-16 md:pb-0'
         )}>
-        <CartProvider>
-          <div className="relative flex min-h-dvh flex-col bg-background">
-            <SiteHeader />
-            <main className={cn(
-              "flex-1",
-              !isReelsPage && "pt-20" 
-            )}>
-              {children}
-            </main>
-            {!isReelsPage && <ContentFooter />}
-            <SiteFooter />
-          </div>
-          <Toaster />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <div className="relative flex min-h-dvh flex-col bg-background">
+              <SiteHeader />
+              <main className={cn(
+                "flex-1",
+                !isReelsPage && "pt-20" 
+              )}>
+                {children}
+              </main>
+              {!isReelsPage && <ContentFooter />}
+              <SiteFooter />
+            </div>
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

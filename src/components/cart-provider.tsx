@@ -1,18 +1,15 @@
 
 "use client";
 
-import { useState, createContext, useEffect, type ReactNode } from "react";
+import { useState, createContext, useEffect, type ReactNode, useCallback } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { db } from "@/lib/firebase";
+import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
+import type { Product } from "@/lib/data";
 
-// The Product type needs an imageId for the cart, but the new structure has imageIds.
-// We'll create a modified Product type for the cart context.
-export interface ProductInCart {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  imageIds: string[];
-  imageId: string; // To ensure compatibility with cart logic
-  category: 'Kits' | 'Components' | 'Recommendation';
+// Keep the ProductInCart simple for local state before knowing the user.
+export interface ProductInCart extends Product {
+  imageId: string;
 }
 
 export interface CartItem extends ProductInCart {
@@ -24,56 +21,118 @@ interface CartContextType {
   addItem: (product: ProductInCart, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
+  clearCart: () => Promise<void>;
   totalItems: number;
   totalPrice: number;
+  loading: boolean;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+const LOCAL_STORAGE_CART_KEY = 'robomart-cart';
 
-  useEffect(() => {
-    const storedCart = localStorage.getItem('robomart-cart');
-    if (storedCart) {
-      try {
-        const parsedCart = JSON.parse(storedCart);
-        // Basic validation to prevent crashes if stored data is malformed
-        if (Array.isArray(parsedCart)) {
-          setItems(parsedCart);
-        }
-      } catch (error) {
-        console.error("Failed to parse cart from localStorage", error);
+export function CartProvider({ children }: { children: ReactNode }) {
+  const { user, loading: authLoading } = useAuth();
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Function to load cart from Firestore
+  const loadCartFromFirestore = useCallback(async (userId: string) => {
+    setLoading(true);
+    const cartRef = doc(db, 'carts', userId);
+    const cartSnap = await getDoc(cartRef);
+
+    if (cartSnap.exists()) {
+      const cartData = cartSnap.data();
+      // TODO: Add validation here
+      setItems(cartData.items || []);
+    } else {
+      // If no Firestore cart, check local storage and merge if necessary
+      const localCart = getCartFromLocalStorage();
+      if (localCart.length > 0) {
+        setItems(localCart);
+        await saveCartToFirestore(userId, localCart);
+        localStorage.removeItem(LOCAL_STORAGE_CART_KEY);
+      } else {
         setItems([]);
       }
     }
+    setLoading(false);
   }, []);
 
-  useEffect(() => {
+  // Function to load cart from local storage
+  const getCartFromLocalStorage = (): CartItem[] => {
     try {
-      localStorage.setItem('robomart-cart', JSON.stringify(items));
+      const storedCart = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
+      if (storedCart) {
+        const parsed = JSON.parse(storedCart);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
+    } catch (error) {
+      console.error("Failed to parse cart from localStorage", error);
+    }
+    return [];
+  };
+  
+  // Effect to handle user state changes
+  useEffect(() => {
+    if (!authLoading) {
+      if (user) {
+        loadCartFromFirestore(user.uid);
+      } else {
+        setItems(getCartFromLocalStorage());
+        setLoading(false);
+      }
+    }
+  }, [user, authLoading, loadCartFromFirestore]);
+
+
+  // Function to save cart to Firestore
+  const saveCartToFirestore = async (userId: string, cartItems: CartItem[]) => {
+    if (!userId) return;
+    try {
+      const cartRef = doc(db, 'carts', userId);
+      await writeBatch(db).set(cartRef, { items: cartItems }).commit();
+    } catch (error) {
+      console.error("Failed to save cart to Firestore", error);
+    }
+  };
+
+  // Function to save cart to local storage
+  const saveCartToLocalStorage = (cartItems: CartItem[]) => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify(cartItems));
     } catch (error) {
       console.error("Failed to save cart to localStorage", error);
     }
-  }, [items]);
+  };
+
+  const updateCart = (newItems: CartItem[]) => {
+    setItems(newItems);
+    if (user) {
+      saveCartToFirestore(user.uid, newItems);
+    } else {
+      saveCartToLocalStorage(newItems);
+    }
+  };
 
   const addItem = (product: ProductInCart, quantity = 1) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-      return [...prevItems, { ...product, quantity }];
-    });
+    const newItems = [...items];
+    const existingItemIndex = newItems.findIndex((item) => item.id === product.id);
+
+    if (existingItemIndex > -1) {
+      newItems[existingItemIndex].quantity += quantity;
+    } else {
+      newItems.push({ ...product, quantity });
+    }
+    updateCart(newItems);
   };
 
   const removeFromCart = (productId: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+    const newItems = items.filter((item) => item.id !== productId);
+    updateCart(newItems);
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -81,15 +140,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(productId);
       return;
     }
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+    const newItems = items.map((item) =>
+      item.id === productId ? { ...item, quantity } : item
     );
+    updateCart(newItems);
   };
 
-  const clearCart = () => {
+  const clearCart = async () => {
     setItems([]);
+    if (user) {
+      try {
+        const cartRef = doc(db, 'carts', user.uid);
+        await writeBatch(db).set(cartRef, { items: [] }).commit();
+      } catch (error) {
+        console.error("Failed to clear cart in Firestore", error);
+      }
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE_CART_KEY);
+    }
   };
 
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -108,6 +176,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         totalItems,
         totalPrice,
+        loading
       }}
     >
       {children}
