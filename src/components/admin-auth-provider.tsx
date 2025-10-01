@@ -2,6 +2,7 @@
 "use client";
 
 import { createContext, useEffect, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
 interface AdminAuthContextType {
   admin: boolean;
@@ -19,6 +20,7 @@ const SESSION_STORAGE_KEY = 'admin-auth';
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [admin, setAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -44,6 +46,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setAdmin(false);
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    router.push('/admin/login');
   };
 
   const value = {
@@ -59,3 +62,5 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     </AdminAuthContext.Provider>
   );
 }
+
+export { useAdminAuth } from "@/hooks/use-admin-auth";

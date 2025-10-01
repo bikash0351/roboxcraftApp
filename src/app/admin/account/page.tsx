@@ -25,7 +25,7 @@ const accountSchema = z.object({
 
 
 export default function AdminAccountPage() {
-    const { admin, loading, logout } = useAdminAuth();
+    const { admin, loading } = useAdminAuth();
     const router = useRouter();
     const { toast } = useToast();
 
@@ -69,13 +69,7 @@ export default function AdminAccountPage() {
     }
     
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-                <h1 className="text-lg font-semibold md:text-2xl">Account Settings</h1>
-                <Button variant="outline" size="sm" onClick={logout}>
-                    <LogOut className="mr-2 h-4 w-4" /> Logout
-                </Button>
-            </div>
+        <div className="flex w-full flex-col">
              <Card>
                 <CardHeader>
                     <CardTitle>Update Credentials</CardTitle>
