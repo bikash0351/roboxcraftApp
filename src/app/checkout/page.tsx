@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -38,31 +38,30 @@ export default function CheckoutPage() {
     const { items, totalPrice, clearCart, loading: cartLoading } = useCart();
     const router = useRouter();
     const { toast } = useToast();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get('redirect');
+
     const shippingCost = 50.00;
     const total = totalPrice + shippingCost;
+
+    const form = useForm<z.infer<typeof checkoutSchema>>({
+        resolver: zodResolver(checkoutSchema),
+        defaultValues: {
+            fullName: "",
+            email: "",
+            address: "",
+            city: "",
+            postalCode: "",
+            country: "India",
+            paymentMethod: "cod",
+        },
+    });
 
     useEffect(() => {
         if (!authLoading && !user) {
             router.replace('/login?redirect=/checkout');
         }
     }, [user, authLoading, router]);
-
-    useEffect(() => {
-        // Only redirect if cart is not loading and items are empty
-        if (!cartLoading && items.length === 0) {
-            router.replace("/shop");
-        }
-    }, [items, cartLoading, router]);
-
-    const form = useForm<z.infer<typeof checkoutSchema>>({
-        resolver: zodResolver(checkoutSchema),
-        defaultValues: {
-            fullName: user?.displayName || "",
-            email: user?.email || "",
-            paymentMethod: "cod",
-            country: "India"
-        },
-    });
 
     useEffect(() => {
         if (user) {
@@ -79,9 +78,15 @@ export default function CheckoutPage() {
     }, [user, form]);
 
 
+    useEffect(() => {
+        if (!cartLoading && items.length === 0 && !redirect) {
+            router.replace("/shop");
+        }
+    }, [items, cartLoading, router, redirect]);
+
+
     async function onSubmit(data: z.infer<typeof checkoutSchema>) {
         if (!user) {
-            // This is a fallback, the useEffect should handle redirection.
              toast({
                 variant: "destructive",
                 title: "Authentication Error",
@@ -105,7 +110,7 @@ export default function CheckoutPage() {
 
             await addDoc(collection(db, "orders"), orderData);
 
-            await clearCart();
+            clearCart();
             toast({
                 title: "Order Placed!",
                 description: "Thank you for your purchase.",
@@ -122,7 +127,7 @@ export default function CheckoutPage() {
         }
     }
 
-    if (authLoading || !user || items.length === 0) {
+    if (authLoading || cartLoading || !user) {
         return (
              <div className="container mx-auto flex h-[60vh] flex-col items-center justify-center">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
