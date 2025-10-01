@@ -4,6 +4,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,21 +53,21 @@ export default function AccountPage() {
                     <CardTitle className="font-headline">Account Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                    <button className="flex w-full items-center justify-between rounded-lg p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground">
+                    <Link href="/account/orders" className="flex w-full items-center justify-between rounded-lg p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground">
                         <div className="flex items-center gap-4">
                             <Package className="h-6 w-6" />
                             <span className="font-medium">My Orders</span>
                         </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                    </button>
+                    </Link>
                     <Separator />
-                    <button className="flex w-full items-center justify-between rounded-lg p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground">
+                    <Link href="/account/addresses" className="flex w-full items-center justify-between rounded-lg p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground">
                         <div className="flex items-center gap-4">
                             <MapPin className="h-6 w-6" />
                             <span className="font-medium">My Addresses</span>
                         </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                    </button>
+                    </Link>
                     <Separator />
                     <button 
                         onClick={signOut}
