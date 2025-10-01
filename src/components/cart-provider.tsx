@@ -4,7 +4,7 @@
 import { useState, createContext, useEffect, type ReactNode, useCallback } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { db } from "@/lib/firebase";
-import { collection, doc, getDoc, writeBatch } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import type { Product } from "@/lib/data";
 
 // Keep the ProductInCart simple for local state before knowing the user.
@@ -94,7 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!userId) return;
     try {
       const cartRef = doc(db, 'carts', userId);
-      await writeBatch(db).set(cartRef, { items: cartItems }).commit();
+      await setDoc(cartRef, { items: cartItems });
     } catch (error) {
       console.error("Failed to save cart to Firestore", error);
     }
@@ -151,7 +151,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (user) {
       try {
         const cartRef = doc(db, 'carts', user.uid);
-        await writeBatch(db).set(cartRef, { items: [] }).commit();
+        await setDoc(cartRef, { items: [] });
       } catch (error) {
         console.error("Failed to clear cart in Firestore", error);
       }

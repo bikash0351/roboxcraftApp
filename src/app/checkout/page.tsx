@@ -34,18 +34,25 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutPage() {
-    const { user } = useAuth();
-    const { items, totalPrice, clearCart } = useCart();
+    const { user, loading: authLoading } = useAuth();
+    const { items, totalPrice, clearCart, loading: cartLoading } = useCart();
     const router = useRouter();
     const { toast } = useToast();
     const shippingCost = 50.00;
     const total = totalPrice + shippingCost;
 
     useEffect(() => {
-        if (items.length === 0) {
+        if (!authLoading && !user) {
+            router.replace('/login?redirect=/checkout');
+        }
+    }, [user, authLoading, router]);
+
+    useEffect(() => {
+        // Only redirect if cart is not loading and items are empty
+        if (!cartLoading && items.length === 0) {
             router.replace("/shop");
         }
-    }, [items, router]);
+    }, [items, cartLoading, router]);
 
     const form = useForm<z.infer<typeof checkoutSchema>>({
         resolver: zodResolver(checkoutSchema),
@@ -74,7 +81,8 @@ export default function CheckoutPage() {
 
     async function onSubmit(data: z.infer<typeof checkoutSchema>) {
         if (!user) {
-            toast({
+            // This is a fallback, the useEffect should handle redirection.
+             toast({
                 variant: "destructive",
                 title: "Authentication Error",
                 description: "You must be logged in to place an order.",
@@ -114,8 +122,12 @@ export default function CheckoutPage() {
         }
     }
 
-    if (items.length === 0) {
-        return null; 
+    if (authLoading || !user || items.length === 0) {
+        return (
+             <div className="container mx-auto flex h-[60vh] flex-col items-center justify-center">
+                <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            </div>
+        )
     }
 
     return (
@@ -297,7 +309,7 @@ export default function CheckoutPage() {
                             </CardContent>
                         </Card>
                         <Button type="submit" className="w-full mt-6" size="lg" disabled={form.formState.isSubmitting}>
-                            {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Place Order"}
+                            {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                             {form.formState.isSubmitting ? "Placing Order..." : "Place Order"}
                         </Button>
                     </div>
