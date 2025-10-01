@@ -81,13 +81,7 @@ export function SiteHeader() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Button asChild>
-              <Link href="/login">
-                <LogIn className="mr-2" /> Login
-              </Link>
-            </Button>
-          )}
+          ) : null}
         </div>
       </div>
     </header>
