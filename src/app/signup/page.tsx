@@ -78,7 +78,7 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Robo Rick" {...field} />
+                      <Input placeholder="Your Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

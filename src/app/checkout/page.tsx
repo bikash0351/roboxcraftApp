@@ -137,7 +137,7 @@ export default function CheckoutPage() {
                                         <FormItem className="sm:col-span-2">
                                             <FormLabel>Full Name</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Robo Rick" {...field} />
+                                                <Input placeholder="Your Name" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
                                         <FormItem className="sm:col-span-2">
                                             <FormLabel>Email Address</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="rick@robomart.dev" type="email" {...field} />
+                                                <Input placeholder="you@example.com" type="email" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
                                         <FormItem className="sm:col-span-2">
                                             <FormLabel>Address</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="123 Robot Lane" {...field} />
+                                                <Input placeholder="Your Address" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -176,7 +176,7 @@ export default function CheckoutPage() {
                                         <FormItem>
                                             <FormLabel>City</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Cyber City" {...field} />
+                                                <Input placeholder="Your City" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
                                         <FormItem>
                                             <FormLabel>Postal Code</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="110001" {...field} />
+                                                <Input placeholder="Your Postal Code" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
