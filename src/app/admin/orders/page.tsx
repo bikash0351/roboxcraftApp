@@ -2,10 +2,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/use-admin-auth";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, where, Timestamp, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, Timestamp, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import type { CartItem } from "@/components/cart-provider";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,10 +13,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Loader2, DollarSign, Users, ShoppingCart, MoreHorizontal, Trash2, Edit, Eye, LogOut } from "lucide-react";
+import { Loader2, MoreHorizontal, Trash2, Edit, Eye } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { RoboxcraftLogo } from "@/components/roboxcraft-logo";
-
 
 interface Order {
     id: string;
@@ -31,13 +29,10 @@ interface Order {
     country: string;
 }
 
-export default function AdminDashboardPage() {
-    const { admin, logout, loading: authLoading } = useAdminAuth();
+export default function AdminOrdersPage() {
+    const { admin, loading: authLoading } = useAdminAuth();
     const router = useRouter();
     const [orders, setOrders] = useState<Order[]>([]);
-    const [totalOrders, setTotalOrders] = useState(0);
-    const [totalUsers, setTotalUsers] = useState(0);
-    const [totalRevenue, setTotalRevenue] = useState(0);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,41 +41,16 @@ export default function AdminDashboardPage() {
         }
     }, [admin, authLoading, router]);
 
-    const fetchData = async () => {
+    const fetchOrders = async () => {
         if (admin) {
             setLoading(true);
             try {
-                // Fetch Orders
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-
-                const ordersQuery = query(
-                    collection(db, "orders"),
-                    where("createdAt", ">=", Timestamp.fromDate(today)),
-                    where("createdAt", "<", Timestamp.fromDate(tomorrow))
-                );
-                const allOrdersQuery = query(collection(db, "orders"));
-
-                const [querySnapshot, allOrdersSnapshot] = await Promise.all([
-                    getDocs(ordersQuery),
-                    getDocs(allOrdersSnapshot)
-                ]);
-                
-                const recentOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
-                setOrders(recentOrders);
-
-                setTotalOrders(allOrdersSnapshot.size);
-                const totalEarning = allOrdersSnapshot.docs.reduce((sum, doc) => sum + (doc.data().total || 0), 0);
-                setTotalRevenue(totalEarning);
-
-                // This is a simplified way to get users. In a real app, you might have a dedicated 'users' collection.
-                const userIds = new Set(allOrdersSnapshot.docs.map(doc => doc.data().userId));
-                setTotalUsers(userIds.size);
-
+                const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(ordersQuery);
+                const allOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
+                setOrders(allOrders);
             } catch (error) {
-                console.error("Error fetching admin data:", error);
+                console.error("Error fetching orders:", error);
             } finally {
                 setLoading(false);
             }
@@ -88,14 +58,13 @@ export default function AdminDashboardPage() {
     };
     
     useEffect(() => {
-        fetchData();
+        fetchOrders();
     }, [admin]);
 
-    const handleDelete = async (orderId: string) => {
+     const handleDelete = async (orderId: string) => {
         try {
             await deleteDoc(doc(db, "orders", orderId));
             setOrders(orders.filter(order => order.id !== orderId));
-            fetchData(); // Refresh totals
         } catch (error) {
             console.error("Error deleting order: ", error);
         }
@@ -111,7 +80,6 @@ export default function AdminDashboardPage() {
         }
     };
 
-
     if (authLoading || loading || !admin) {
         return (
             <div className="flex h-screen w-full items-center justify-center">
@@ -120,52 +88,12 @@ export default function AdminDashboardPage() {
         );
     }
 
-    const totalStock = 'N/A'; // Placeholder
-
     return (
-        <>
-            <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">₹{totalRevenue.toFixed(2)}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-                        <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">+{totalOrders}</div>
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">+{totalUsers}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Stock</CardTitle>
-                        <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{totalStock}</div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <Card className="mt-8">
+        <div className="flex flex-col gap-4">
+             <h1 className="text-lg font-semibold md:text-2xl">Orders</h1>
+            <Card>
                 <CardHeader>
-                    <CardTitle>Recent Orders (Today)</CardTitle>
+                    <CardTitle>All Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -173,8 +101,8 @@ export default function AdminDashboardPage() {
                             <TableRow>
                                 <TableHead>Order ID</TableHead>
                                 <TableHead>Customer</TableHead>
-                                <TableHead>Address</TableHead>
-                                <TableHead>Order Time</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Total</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
@@ -185,8 +113,8 @@ export default function AdminDashboardPage() {
                                     <TableRow key={order.id}>
                                         <TableCell className="font-medium">#{order.id.slice(0, 7)}</TableCell>
                                         <TableCell>{order.fullName}</TableCell>
-                                        <TableCell>{`${order.address}, ${order.city}`}</TableCell>
-                                        <TableCell>{new Date(order.createdAt.seconds * 1000).toLocaleTimeString()}</TableCell>
+                                        <TableCell>{new Date(order.createdAt.seconds * 1000).toLocaleDateString()}</TableCell>
+                                        <TableCell>₹{order.total.toFixed(2)}</TableCell>
                                         <TableCell>
                                             <Badge variant={order.status === 'pending' ? 'secondary' : 'default'} className="capitalize">{order.status}</Badge>
                                         </TableCell>
@@ -199,11 +127,9 @@ export default function AdminDashboardPage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem><Eye className="mr-2 h-4 w-4" />View</DropdownMenuItem>
-                                                    
+                                                    <DropdownMenuItem><Eye className="mr-2 h-4 w-4" />View Details</DropdownMenuItem>
                                                     <DropdownMenuItem onSelect={() => handleUpdateStatus(order.id, 'shipped')}><Edit className="mr-2 h-4 w-4" />Mark as Shipped</DropdownMenuItem>
                                                     <DropdownMenuItem onSelect={() => handleUpdateStatus(order.id, 'delivered')}><Edit className="mr-2 h-4 w-4" />Mark as Delivered</DropdownMenuItem>
-                                                    
                                                     <AlertDialog>
                                                         <AlertDialogTrigger asChild>
                                                             <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive"><Trash2 className="mr-2 h-4 w-4" />Delete</DropdownMenuItem>
@@ -211,9 +137,7 @@ export default function AdminDashboardPage() {
                                                         <AlertDialogContent>
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    This action cannot be undone. This will permanently delete the order.
-                                                                </AlertDialogDescription>
+                                                                <AlertDialogDescription>This will permanently delete the order.</AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
                                                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -221,7 +145,6 @@ export default function AdminDashboardPage() {
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
-
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -229,13 +152,13 @@ export default function AdminDashboardPage() {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center h-24">No recent orders today.</TableCell>
+                                    <TableCell colSpan={6} className="text-center h-24">No orders found.</TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </CardContent>
             </Card>
-        </>
+        </div>
     );
 }
