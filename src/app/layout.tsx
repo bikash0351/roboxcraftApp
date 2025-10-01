@@ -17,6 +17,11 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isReelsPage = pathname === '/reels';
+  const isAdminPage = pathname.startsWith('/admin');
+
+  if (isAdminPage) {
+    return <>{children}</>;
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>
