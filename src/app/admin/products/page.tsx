@@ -22,8 +22,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const productSchema = z.object({
   id: z.string().optional(),
@@ -45,6 +46,8 @@ export default function AdminProductsPage() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<ProductWithId | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof productSchema>>({
@@ -87,6 +90,7 @@ export default function AdminProductsPage() {
 
     const handleDialogOpen = (product: ProductWithId | null = null) => {
         setSelectedProduct(product);
+        setImageFile(null);
         if (product) {
             form.reset({
                 ...product,
@@ -111,14 +115,25 @@ export default function AdminProductsPage() {
     };
 
     const onSubmit = async (values: z.infer<typeof productSchema>) => {
+        setIsUploading(true);
+        let imageUrl = selectedProduct?.imageUrl || '';
+
         try {
+            if (imageFile) {
+                const storageRef = ref(storage, `products/${Date.now()}-${imageFile.name}`);
+                await uploadBytes(storageRef, imageFile);
+                imageUrl = await getDownloadURL(storageRef);
+            }
+            
+            const productData = { ...values, imageUrl };
+
             if (selectedProduct) { // Editing
                 const productRef = doc(db, "products", selectedProduct.firestoreId);
-                await updateDoc(productRef, values);
+                await updateDoc(productRef, productData);
                 toast({ title: "Product Updated", description: `${values.name} has been updated.` });
             } else { // Adding
-                const docRef = await addDoc(collection(db, "products"), {
-                    ...values,
+                await addDoc(collection(db, "products"), {
+                    ...productData,
                     id: `prod-${Date.now()}`, // Keep original ID for client-side routing if needed
                     imageIds: ['ai-product'], // Default image
                 });
@@ -129,6 +144,8 @@ export default function AdminProductsPage() {
         } catch (error) {
             console.error("Error saving product: ", error);
             toast({ variant: "destructive", title: "Save Failed", description: "Could not save product to the database." });
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -252,17 +269,17 @@ export default function AdminProductsPage() {
                                  <FormItem>
                                     <FormLabel>Product Image</FormLabel>
                                     <FormControl>
-                                        <Input type="file" />
+                                        <Input type="file" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
                                     </FormControl>
-                                    <FormDescription>
-                                        Image upload functionality coming soon.
+                                     <FormDescription>
+                                        Upload a new image for the product.
                                     </FormDescription>
                                 </FormItem>
                             </form>
                         </Form>
                         <DialogFooter>
-                            <Button type="submit" form="product-form" disabled={form.formState.isSubmitting}>
-                                {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            <Button type="submit" form="product-form" disabled={form.formState.isSubmitting || isUploading}>
+                                {(form.formState.isSubmitting || isUploading) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                 {selectedProduct ? 'Save Changes' : 'Create Product'}
                             </Button>
                         </DialogFooter>
@@ -294,15 +311,13 @@ export default function AdminProductsPage() {
                                 return (
                                 <TableRow key={product.firestoreId}>
                                     <TableCell className="hidden sm:table-cell">
-                                        {productImage && 
-                                            <Image
-                                                alt={product.name}
-                                                className="aspect-square rounded-md object-cover"
-                                                height="64"
-                                                src={product.imageUrl || productImage.imageUrl}
-                                                width="64"
-                                            />
-                                        }
+                                        <Image
+                                            alt={product.name}
+                                            className="aspect-square rounded-md object-cover"
+                                            height="64"
+                                            src={product.imageUrl || productImage?.imageUrl || "https://placehold.co/64x64"}
+                                            width="64"
+                                        />
                                     </TableCell>
                                     <TableCell className="font-medium">{product.name}</TableCell>
                                     <TableCell>
