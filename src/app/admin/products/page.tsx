@@ -10,7 +10,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { products as initialProducts, type Product } from "@/lib/data";
+import { type Product } from "@/lib/data";
 import { Loader2, PlusCircle, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -22,6 +22,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 
 const productSchema = z.object({
   id: z.string().optional(),
@@ -29,16 +31,20 @@ const productSchema = z.object({
   category: z.enum(["Kits", "Components"]),
   price: z.coerce.number().positive("Price must be a positive number"),
   originalPrice: z.coerce.number().optional(),
-  imageIds: z.array(z.string()).optional(), // For simplicity, we won't edit images in this form
+  stock: z.coerce.number().min(0, "Stock can't be negative"),
+  imageUrl: z.string().optional(),
 });
 
+type ProductWithId = Product & { firestoreId: string };
+
 export default function AdminProductsPage() {
-    const { admin, loading } = useAdminAuth();
+    const { admin, loading: adminLoading } = useAdminAuth();
     const router = useRouter();
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [products, setProducts] = useState<ProductWithId[]>([]);
+    const [dataLoading, setDataLoading] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<ProductWithId | null>(null);
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof productSchema>>({
@@ -48,57 +54,100 @@ export default function AdminProductsPage() {
             category: "Kits",
             price: 0,
             originalPrice: undefined,
+            stock: 0,
+            imageUrl: "",
         },
     });
+     
+    const fetchProducts = async () => {
+        setDataLoading(true);
+        try {
+            const productsQuery = query(collection(db, "products"), orderBy("name"));
+            const querySnapshot = await getDocs(productsQuery);
+            const productsData = querySnapshot.docs.map(doc => ({ 
+                firestoreId: doc.id,
+                ...doc.data() 
+            } as ProductWithId));
+            setProducts(productsData);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            toast({ variant: "destructive", title: "Failed to fetch products" });
+        } finally {
+            setDataLoading(false);
+        }
+    };
 
     useEffect(() => {
-        if (!loading && !admin) {
+        if (!adminLoading && !admin) {
             router.replace('/admin/login');
+        } else if (admin) {
+            fetchProducts();
         }
-    }, [admin, loading, router]);
+    }, [admin, adminLoading, router]);
 
-    const handleDialogOpen = (product: Product | null = null) => {
+    const handleDialogOpen = (product: ProductWithId | null = null) => {
         setSelectedProduct(product);
         if (product) {
-            form.reset(product);
+            form.reset({
+                ...product,
+                originalPrice: product.originalPrice || undefined,
+            });
         } else {
             form.reset({
                 name: "",
                 category: "Kits",
                 price: 0,
                 originalPrice: undefined,
+                stock: 0,
+                imageUrl: "",
             });
         }
         setDialogOpen(true);
     };
 
-    const handleDeleteAlertOpen = (product: Product) => {
+    const handleDeleteAlertOpen = (product: ProductWithId) => {
         setSelectedProduct(product);
         setDeleteAlertOpen(true);
     };
 
-    const onSubmit = (values: z.infer<typeof productSchema>) => {
-        // In a real app, you would save this to your database.
-        if (selectedProduct) { // Editing
-            setProducts(products.map(p => p.id === selectedProduct.id ? { ...p, ...values } : p));
-            toast({ title: "Product Updated", description: `${values.name} has been updated.` });
-        } else { // Adding
-            const newProduct: Product = { ...values, id: `prod-${Date.now()}`, imageIds: ['kit-arduino'] }; // Dummy image
-            setProducts([newProduct, ...products]);
-            toast({ title: "Product Added", description: `${values.name} has been added.` });
+    const onSubmit = async (values: z.infer<typeof productSchema>) => {
+        try {
+            if (selectedProduct) { // Editing
+                const productRef = doc(db, "products", selectedProduct.firestoreId);
+                await updateDoc(productRef, values);
+                toast({ title: "Product Updated", description: `${values.name} has been updated.` });
+            } else { // Adding
+                const docRef = await addDoc(collection(db, "products"), {
+                    ...values,
+                    id: `prod-${Date.now()}`, // Keep original ID for client-side routing if needed
+                    imageIds: ['ai-product'], // Default image
+                });
+                toast({ title: "Product Added", description: `${values.name} has been added.` });
+            }
+            fetchProducts(); // Refresh data
+            setDialogOpen(false);
+        } catch (error) {
+            console.error("Error saving product: ", error);
+            toast({ variant: "destructive", title: "Save Failed", description: "Could not save product to the database." });
         }
-        setDialogOpen(false);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!selectedProduct) return;
-        // In a real app, you would delete this from your database.
-        setProducts(products.filter(p => p.id !== selectedProduct.id));
-        toast({ title: "Product Deleted", description: `${selectedProduct.name} has been deleted.` });
-        setDeleteAlertOpen(false);
+        try {
+            await deleteDoc(doc(db, "products", selectedProduct.firestoreId));
+            toast({ title: "Product Deleted", description: `${selectedProduct.name} has been deleted.` });
+            fetchProducts(); // Refresh data
+            setDeleteAlertOpen(false);
+        } catch (error) {
+            console.error("Error deleting product: ", error);
+            toast({ variant: "destructive", title: "Delete Failed", description: "Could not delete product." });
+        }
     };
 
-    if (loading || !admin) {
+    const isLoading = adminLoading || dataLoading;
+
+    if (isLoading || !admin) {
         return (
             <div className="flex h-screen w-full items-center justify-center">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -180,17 +229,39 @@ export default function AdminProductsPage() {
                                             <FormItem>
                                                 <FormLabel>Original Price (₹)</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" placeholder="e.g., 59.99" {...field} />
+                                                    <Input type="number" placeholder="e.g., 59.99" {...field} value={field.value ?? ''} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
                                 </div>
+                                <FormField
+                                    control={form.control}
+                                    name="stock"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Stock Quantity</FormLabel>
+                                            <FormControl>
+                                                <Input type="number" placeholder="e.g., 100" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormItem>
+                                    <FormLabel>Product Image</FormLabel>
+                                    <FormControl>
+                                        <Input type="file" />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Image upload functionality coming soon.
+                                    </FormDescription>
+                                </FormItem>
                             </form>
                         </Form>
                         <DialogFooter>
-                            <Button type="submit" form="product-form">
+                            <Button type="submit" form="product-form" disabled={form.formState.isSubmitting}>
                                 {form.formState.isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                 {selectedProduct ? 'Save Changes' : 'Create Product'}
                             </Button>
@@ -211,23 +282,24 @@ export default function AdminProductsPage() {
                                 <TableHead>Name</TableHead>
                                 <TableHead>Category</TableHead>
                                 <TableHead>Price</TableHead>
+                                <TableHead>Stock</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {products.map(product => {
-                                const productImage = PlaceHolderImages.find(p => p.id === product.imageIds[0]);
+                            {products.length > 0 ? products.map(product => {
+                                const productImage = PlaceHolderImages.find(p => p.id === (product.imageIds && product.imageIds[0] || 'ai-product'));
                                 const hasDiscount = product.originalPrice && product.originalPrice > product.price;
 
                                 return (
-                                <TableRow key={product.id}>
+                                <TableRow key={product.firestoreId}>
                                     <TableCell className="hidden sm:table-cell">
                                         {productImage && 
                                             <Image
                                                 alt={product.name}
                                                 className="aspect-square rounded-md object-cover"
                                                 height="64"
-                                                src={productImage.imageUrl}
+                                                src={product.imageUrl || productImage.imageUrl}
                                                 width="64"
                                             />
                                         }
@@ -242,6 +314,7 @@ export default function AdminProductsPage() {
                                             {hasDiscount && <span className="text-xs text-muted-foreground line-through">₹{product.originalPrice?.toFixed(2)}</span>}
                                         </div>
                                     </TableCell>
+                                    <TableCell>{product.stock}</TableCell>
                                     <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -261,7 +334,13 @@ export default function AdminProductsPage() {
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
-                            )})}
+                            )}) : (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="h-24 text-center">
+                                        No products found. Add your first product!
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
@@ -284,5 +363,3 @@ export default function AdminProductsPage() {
         </div>
     );
 }
-
-    

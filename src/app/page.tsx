@@ -3,11 +3,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Bot, CircuitBoard, Code, ToyBrick } from 'lucide-react';
+import { ArrowRight, Bot, CircuitBoard, Code, Loader2, ToyBrick } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages as placeholderImages } from '@/lib/placeholder-images';
-import { products, courses } from '@/lib/data';
+import { courses, type Product } from '@/lib/data';
 import { ProductCard } from '@/components/product-card';
 import {
   Carousel,
@@ -16,12 +16,16 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { collection, getDocs, query, where, limit } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function Home() {
-  const kits = products.filter(p => p.category === 'Kits').slice(0, 4);
-  const components = products.filter(p => p.category === 'Components').slice(0, 4);
+  const [kits, setKits] = useState<Product[]>([]);
+  const [components, setComponents] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const posters = placeholderImages.filter(p => p.id.startsWith('hero-poster-'));
 
   const plugin = React.useRef(
@@ -32,17 +36,38 @@ export default function Home() {
   const [current, setCurrent] = React.useState(0)
  
   React.useEffect(() => {
-    if (!api) {
-      return
-    }
- 
-    setCurrent(api.selectedScrollSnap())
- 
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap())
-    })
-  }, [api])
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const productsRef = collection(db, "products");
+        
+        const kitsQuery = query(productsRef, where("category", "==", "Kits"), limit(4));
+        const componentsQuery = query(productsRef, where("category", "==", "Components"), limit(4));
+        
+        const [kitsSnapshot, componentsSnapshot] = await Promise.all([
+          getDocs(kitsQuery),
+          getDocs(componentsQuery)
+        ]);
+
+        const kitsData = kitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        const componentsData = componentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+
+        setKits(kitsData);
+        setComponents(componentsData);
+      } catch (error) {
+        console.error("Error fetching products for homepage:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -134,11 +159,17 @@ export default function Home() {
             <Link href="/shop">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {kits.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+         {loading ? (
+          <div className="flex justify-center items-center h-48">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {kits.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 md:mt-16">
@@ -148,11 +179,17 @@ export default function Home() {
             <Link href="/shop">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {components.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+         {loading ? (
+           <div className="flex justify-center items-center h-48">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {components.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 my-12 md:my-16">
@@ -190,4 +227,3 @@ export default function Home() {
     </div>
   );
 }
-    

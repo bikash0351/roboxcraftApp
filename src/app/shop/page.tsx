@@ -1,13 +1,58 @@
 
 "use client";
 
+import { useEffect, useState } from 'react';
 import { ProductCard } from '@/components/product-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { products } from '@/lib/data';
+import { type Product } from '@/lib/data';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { Loader2 } from 'lucide-react';
+import AiRecommendations from '@/components/ai-recommendations';
+
 
 export default function ShopPage() {
-  const kits = products.filter((p) => p.category === 'Kits');
-  const components = products.filter((p) => p.category === 'Components');
+  const [kits, setKits] = useState<Product[]>([]);
+  const [components, setComponents] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const productsRef = collection(db, "products");
+        
+        const kitsQuery = query(productsRef, where("category", "==", "Kits"));
+        const componentsQuery = query(productsRef, where("category", "==", "Components"));
+        
+        const [kitsSnapshot, componentsSnapshot] = await Promise.all([
+          getDocs(kitsQuery),
+          getDocs(componentsQuery)
+        ]);
+
+        const kitsData = kitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        const componentsData = componentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+
+        setKits(kitsData);
+        setComponents(componentsData);
+
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto flex h-[60vh] flex-col items-center justify-center">
+          <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
