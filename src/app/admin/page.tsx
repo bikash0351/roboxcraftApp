@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/use-admin-auth";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, where, Timestamp, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, Timestamp, deleteDoc, doc, updateDoc, orderBy } from "firebase/firestore";
 import type { CartItem } from "@/components/cart-provider";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,9 +13,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Loader2, DollarSign, Users, ShoppingCart, MoreHorizontal, Trash2, Edit, Eye, LogOut } from "lucide-react";
+import { Loader2, DollarSign, Users, ShoppingCart, MoreHorizontal, Trash2, Edit, Eye, Package } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { RoboxcraftLogo } from "@/components/roboxcraft-logo";
+import { type Product } from "@/lib/data";
 
 
 interface Order {
@@ -29,15 +29,17 @@ interface Order {
     city: string;
     postalCode: string;
     country: string;
+    userId: string;
 }
 
 export default function AdminDashboardPage() {
-    const { admin, logout, loading: authLoading } = useAdminAuth();
+    const { admin, loading: authLoading } = useAdminAuth();
     const router = useRouter();
     const [orders, setOrders] = useState<Order[]>([]);
     const [totalOrders, setTotalOrders] = useState(0);
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalRevenue, setTotalRevenue] = useState(0);
+    const [totalStock, setTotalStock] = useState(0);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -50,34 +52,47 @@ export default function AdminDashboardPage() {
         if (admin) {
             setLoading(true);
             try {
-                // Fetch Orders
+                // --- Fetch All Data ---
+                const allOrdersQuery = query(collection(db, "orders"));
+                const allProductsQuery = query(collection(db, "products"));
+
+                const [allOrdersSnapshot, allProductsSnapshot] = await Promise.all([
+                    getDocs(allOrdersQuery),
+                    getDocs(allProductsQuery),
+                ]);
+
+                // --- Calculate Totals ---
+                // Total Revenue and Orders
+                const allOrdersData = allOrdersSnapshot.docs.map(doc => doc.data() as Order);
+                const totalEarning = allOrdersData.reduce((sum, order) => sum + (order.total || 0), 0);
+                setTotalRevenue(totalEarning);
+                setTotalOrders(allOrdersSnapshot.size);
+
+                // Total Users
+                const userIds = new Set(allOrdersData.map(order => order.userId));
+                setTotalUsers(userIds.size);
+
+                // Total Stock
+                const productsData = allProductsSnapshot.docs.map(doc => doc.data() as Product);
+                const stockSum = productsData.reduce((sum, product) => sum + (product.stock || 0), 0);
+                setTotalStock(stockSum);
+
+                // --- Fetch Recent Orders (Today) ---
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
 
-                const ordersQuery = query(
+                const recentOrdersQuery = query(
                     collection(db, "orders"),
                     where("createdAt", ">=", Timestamp.fromDate(today)),
-                    where("createdAt", "<", Timestamp.fromDate(tomorrow))
+                    where("createdAt", "<", Timestamp.fromDate(tomorrow)),
+                    orderBy("createdAt", "desc")
                 );
-                const allOrdersQuery = query(collection(db, "orders"));
 
-                const [querySnapshot, allOrdersSnapshot] = await Promise.all([
-                    getDocs(ordersQuery),
-                    getDocs(allOrdersSnapshot)
-                ]);
-                
-                const recentOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
+                const recentOrdersSnapshot = await getDocs(recentOrdersQuery);
+                const recentOrders = recentOrdersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
                 setOrders(recentOrders);
-
-                setTotalOrders(allOrdersSnapshot.size);
-                const totalEarning = allOrdersSnapshot.docs.reduce((sum, doc) => sum + (doc.data().total || 0), 0);
-                setTotalRevenue(totalEarning);
-
-                // This is a simplified way to get users. In a real app, you might have a dedicated 'users' collection.
-                const userIds = new Set(allOrdersSnapshot.docs.map(doc => doc.data().userId));
-                setTotalUsers(userIds.size);
 
             } catch (error) {
                 console.error("Error fetching admin data:", error);
@@ -88,7 +103,9 @@ export default function AdminDashboardPage() {
     };
     
     useEffect(() => {
-        fetchData();
+        if(admin) {
+            fetchData();
+        }
     }, [admin]);
 
     const handleDelete = async (orderId: string) => {
@@ -119,8 +136,6 @@ export default function AdminDashboardPage() {
             </div>
         );
     }
-
-    const totalStock = 'N/A'; // Placeholder
 
     return (
         <>
@@ -155,7 +170,7 @@ export default function AdminDashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Stock</CardTitle>
-                        <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+                        <Package className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{totalStock}</div>
@@ -239,3 +254,5 @@ export default function AdminDashboardPage() {
         </>
     );
 }
+
+    
