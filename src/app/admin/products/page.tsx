@@ -116,30 +116,34 @@ export default function AdminProductsPage() {
 
     const onSubmit = async (values: z.infer<typeof productSchema>) => {
         setIsUploading(true);
-        let imageUrl = values.imageUrl || '';
+        let imageUrl = selectedProduct?.imageUrl || '';
 
         try {
+            // If there's a new file, upload it and get the URL
             if (imageFile) {
                 const storageRef = ref(storage, `products/${Date.now()}-${imageFile.name}`);
                 await uploadBytes(storageRef, imageFile);
                 imageUrl = await getDownloadURL(storageRef);
             }
-            
+
             const productData = { ...values, imageUrl };
 
-            if (selectedProduct) { // Editing
+            if (selectedProduct) {
+                // Editing an existing product
                 const productRef = doc(db, "products", selectedProduct.firestoreId);
                 await updateDoc(productRef, productData);
                 toast({ title: "Product Updated", description: `${values.name} has been updated.` });
-            } else { // Adding
+            } else {
+                // Adding a new product
                 await addDoc(collection(db, "products"), {
                     ...productData,
                     id: `prod-${Date.now()}`,
-                    imageIds: ['ai-product'],
+                    // Assign a default image ID if no image is uploaded
+                    imageIds: productData.imageUrl ? [] : ['ai-product'],
                 });
                 toast({ title: "Product Added", description: `${values.name} has been added.` });
             }
-            fetchProducts(); // Refresh data
+            fetchProducts();
             setDialogOpen(false);
         } catch (error) {
             console.error("Error saving product: ", error);
@@ -272,7 +276,7 @@ export default function AdminProductsPage() {
                                         <Input type="file" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
                                     </FormControl>
                                      <FormDescription>
-                                        Upload a new image for the product. If not provided, a default image will be used.
+                                        Upload a new image. If none is chosen, a default image will be used.
                                     </FormDescription>
                                 </FormItem>
                             </form>
@@ -377,5 +381,6 @@ export default function AdminProductsPage() {
             </AlertDialog>
         </div>
     );
+}
 
     
