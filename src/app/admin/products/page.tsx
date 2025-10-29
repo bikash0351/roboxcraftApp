@@ -116,7 +116,7 @@ export default function AdminProductsPage() {
 
     const onSubmit = async (values: z.infer<typeof productSchema>) => {
         setIsUploading(true);
-        let imageUrl = selectedProduct?.imageUrl || '';
+        let imageUrl = values.imageUrl || '';
 
         try {
             if (imageFile) {
@@ -134,8 +134,8 @@ export default function AdminProductsPage() {
             } else { // Adding
                 await addDoc(collection(db, "products"), {
                     ...productData,
-                    id: `prod-${Date.now()}`, // Keep original ID for client-side routing if needed
-                    imageIds: ['ai-product'], // Default image
+                    id: `prod-${Date.now()}`,
+                    imageIds: ['ai-product'],
                 });
                 toast({ title: "Product Added", description: `${values.name} has been added.` });
             }
@@ -272,7 +272,7 @@ export default function AdminProductsPage() {
                                         <Input type="file" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
                                     </FormControl>
                                      <FormDescription>
-                                        Upload a new image for the product.
+                                        Upload a new image for the product. If not provided, a default image will be used.
                                     </FormDescription>
                                 </FormItem>
                             </form>
@@ -377,4 +377,5 @@ export default function AdminProductsPage() {
             </AlertDialog>
         </div>
     );
-}
+
+    
