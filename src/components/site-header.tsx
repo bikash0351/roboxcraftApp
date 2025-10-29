@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Skeleton } from "./ui/skeleton";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -52,7 +53,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-4">
           {loading ? (
-             <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+             <Skeleton className="h-10 w-10 rounded-full" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -81,7 +82,13 @@ export function SiteHeader() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : null}
+          ) : (
+            <Button asChild>
+              <Link href="/login">
+                <LogIn className="mr-2 h-4 w-4" /> Login
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

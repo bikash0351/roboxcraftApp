@@ -17,7 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Loader2 } from "lucide-react";
 
@@ -56,7 +56,7 @@ export default function CheckoutPage() {
             paymentMethod: "cod",
         },
     });
-
+    
     useEffect(() => {
         if (!authLoading && !user) {
             router.replace('/login?redirect=/checkout');
@@ -68,14 +68,14 @@ export default function CheckoutPage() {
             form.reset({
                 fullName: user.displayName || "",
                 email: user.email || "",
-                address: "",
+                address: "", // Keep address fields empty for user to fill
                 city: "",
                 postalCode: "",
                 country: "India",
                 paymentMethod: "cod",
             });
         }
-    }, [user, form]);
+    }, [user, form.reset]);
 
 
     useEffect(() => {
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
                 shipping: shippingCost,
                 total,
                 status: 'pending',
-                createdAt: new Date(),
+                createdAt: serverTimestamp(),
             };
 
             await addDoc(collection(db, "orders"), orderData);
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
                                         <FormItem className="sm:col-span-2">
                                             <FormLabel>Email Address</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="you@example.com" type="email" {...field} />
+                                                <Input placeholder="you@example.com" type="email" {...field} readOnly />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
