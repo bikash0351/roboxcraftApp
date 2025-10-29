@@ -83,9 +83,13 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
+             <Button asChild variant="ghost" className="relative h-10 w-10 rounded-full">
               <Link href="/login">
-                <LogIn className="mr-2 h-4 w-4" /> Login
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback>
+                      <User className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
               </Link>
             </Button>
           )}
